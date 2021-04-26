@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    "target": "es6",
+    "module": "commonjs",
+    "lib": [
+      "DOM",
+      "ESNext.AsyncIterable",
+      "ES2015",
+      "ES6",
+      "ES2017"
+    ],
+    "allowJs": false,
+    "outDir": "dist",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "./typings"
+    ],
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": [
+    "src/**/*.spec.ts",
+    "**/__tests__/**",
+    "dist"
+  ]
+}

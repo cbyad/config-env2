@@ -1,0 +1,22 @@
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# General
+.DS_Store
+
+# Dependency directories
+**/node_modules/
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+
+# Logs
+logs
+*.log
+
+# project
+**/dist/*
