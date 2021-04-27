@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/welcometrack/p11-order.git"
+    "url": "https://github.com/cbyad/env_config_validator.git"
   },
   "keywords": [],
   "author": "yannick (cbyad)",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "dotenv": "^8.1.0",
     "fp-ts": "^2.9.5",
