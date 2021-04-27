@@ -8,7 +8,7 @@ import { Reporter } from "io-ts/lib/Reporter"
 export namespace EnvConfigValidator {
 
     class CustomReporter implements Reporter<string> {
-        public report = (validation: io.Validation<string>): string => pipe(
+        public report = <T>(validation: io.Validation<T>): string => pipe(
             validation,
             E.fold(
                 (errors) => {
@@ -19,30 +19,36 @@ export namespace EnvConfigValidator {
             )
         )
     }
-    const reporter =  new CustomReporter()
+    export const reporter = new CustomReporter()
     const SERVICE_SEPARATOR = '_'
 
-    export const load = <T>(codecs: io.Type<T, unknown, unknown>, envPath?: string): T => {
-        const result = pipe(
-            envPath ? config({ path: resolve(__dirname, envPath) }) : config(),
-            fromEnvToJson,
-            E.map(candidate => validate(candidate, codecs)),
-            E.map(E.map(_ => _))
-        )
-        if (E.isLeft(result)) throw new Error(String(result.left.message))
-        if (E.isLeft(result.right)) throw new Error(reporter.report(result.right))
-        return result.right.right
+    export const unsafeLoad = <T>(codecs: io.Type<T, unknown, unknown>, envPath?: string): T => {
+        const result = load(codecs, envPath)
+        if (E.isLeft(result)) throw new Error(String(result.left))
+        return result.right
     }
 
-    const validate = <T, I>(input: I, codecs: io.Type<T, unknown, I>) => codecs.decode(input)
+    export const load = <T>(codecs: io.Type<T, unknown, unknown>, envPath?: string): E.Either<string, T> => pipe(
+        envPath ? config({ path: resolve(__dirname, envPath) }) : config(),
+        fromEnvToJson,
+        E.map(candidate => validate(candidate, codecs)),
+        E.fold<string, io.Validation<T>, E.Either<string, T>>(
+            E.left,
+            validation => E.fold<io.Errors, T, E.Either<string, T>>(
+                _ => E.left(reporter.report(validation)),
+                (result: T) => E.right(result)
+            )(validation)
+        )
+    )
 
-    const fromEnvToJson = (fromEnv: DotenvConfigOutput, groupBy: boolean = false): E.Either<Error, unknown> => {
+    const validate = <T>(input: unknown, codecs: io.Type<T, unknown, unknown>) => codecs.decode(input)
+
+    const fromEnvToJson = (fromEnv: DotenvConfigOutput, groupBy: boolean = false): E.Either<string, unknown> => {
         const { error, parsed } = fromEnv
-        if (error) return E.throwError(error)
+        if (error) return E.left(error.message)
         if (parsed) {
             if (groupBy) {
-                // Now group key by concern
-                const parsedGroupBy = Object.keys(parsed).reduce((acc, key) => {
+                const parsedGroupBy: unknown = Object.keys(parsed).reduce((acc, key) => {
                     const prefix = key.split(SERVICE_SEPARATOR)
                     if (prefix.length > 0) {
                         const [groupBy, remains] = [prefix[0], prefix.slice(1).join(SERVICE_SEPARATOR)]
@@ -55,7 +61,7 @@ export namespace EnvConfigValidator {
             }
             return E.right(parsed)
         }
-        return E.throwError(new Error())
+        return E.left('No content parsed')
     }
 
 }

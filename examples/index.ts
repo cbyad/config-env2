@@ -1,4 +1,5 @@
 import * as io from "io-ts"
+import * as E from "fp-ts/lib/Either"
 import { EnvConfigValidator } from "../src/configvalidator"
 
 const EnvPayload = io.strict({
@@ -11,4 +12,5 @@ const EnvPayload = io.strict({
 })
 type EnvPayload = io.TypeOf<typeof EnvPayload>
 
-const result = EnvConfigValidator.load(EnvPayload)
+const result = EnvConfigValidator.unsafeLoad(EnvPayload)
+E.fold(console.error, console.log)(EnvConfigValidator.load(EnvPayload))
