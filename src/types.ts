@@ -16,7 +16,15 @@ type NonEmptyString = io.TypeOf<typeof NonEmptyString>
 /**
  * Number from env
  */
-const NumberString = NonEmptyString
+interface NumberStringBrand {
+    readonly NumberString: unique symbol
+}
+const NumberString = io.brand(
+    NonEmptyString,
+    (s): s is io.Branded<NonEmptyString, NumberStringBrand> => /^\d+$/.test(s),
+    'NumberString'
+)
+// const NumberString = NonEmptyString
 type NumberString = io.TypeOf<typeof NumberString>
 
 /**
@@ -33,4 +41,7 @@ const URL = io.brand(
 )
 type URL = io.TypeOf<typeof URL>
 
-export { NonEmptyString, NumberString, URL }
+export {
+    NonEmptyStringBrand, NumberStringBrand, UrlBrand,
+    NonEmptyString, NumberString, URL
+}

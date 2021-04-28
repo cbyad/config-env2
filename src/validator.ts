@@ -2,8 +2,10 @@ import { config, DotenvConfigOutput } from "dotenv"
 import * as E from "fp-ts/lib/Either"
 import { pipe } from "fp-ts/lib/function"
 import * as io from "io-ts"
-import { resolve } from "path"
 import { Reporter } from "io-ts/lib/Reporter"
+import { resolve } from "path"
+
+import Either = E.Either
 
 export namespace EnvConfigValidator {
 
@@ -11,8 +13,8 @@ export namespace EnvConfigValidator {
         public report = <T>(validation: io.Validation<T>): string => pipe(
             validation,
             E.fold(
-                (errors) => {
-                    const fields = errors.map((error) => error.context.map(({ key }) => key).join(', '))
+                errors => {
+                    const fields = errors.map(error => error.context.map(({ key }) => key).join(', '))
                     return ['Required Fields:', ...fields].join('').replace(':,', ':')
                 },
                 _ => 'no errors'
@@ -28,13 +30,13 @@ export namespace EnvConfigValidator {
         return result.right
     }
 
-    export const load = <T>(codecs: io.Type<T, unknown, unknown>, groupBy: boolean = false, envPath?: string): E.Either<string, T> => pipe(
+    export const load = <T>(codecs: io.Type<T, unknown, unknown>, groupBy: boolean = false, envPath?: string): Either<string, T> => pipe(
         envPath ? config({ path: resolve(__dirname, envPath) }) : config(),
         fromEnvToJson(groupBy),
         E.map(candidate => validate(candidate, codecs)),
-        E.fold<string, io.Validation<T>, E.Either<string, T>>(
+        E.fold<string, io.Validation<T>, Either<string, T>>(
             E.left,
-            validation => E.fold<io.Errors, T, E.Either<string, T>>(
+            validation => E.fold<io.Errors, T, Either<string, T>>(
                 _ => E.left(reporter.report(validation)),
                 (result: T) => E.right(result)
             )(validation)
@@ -43,7 +45,7 @@ export namespace EnvConfigValidator {
 
     const validate = <T>(input: unknown, codecs: io.Type<T, unknown, unknown>) => codecs.decode(input)
 
-    const fromEnvToJson = (groupBy: boolean = false) => (fromEnv: DotenvConfigOutput): E.Either<string, unknown> => {
+    const fromEnvToJson = (groupBy: boolean = false) => (fromEnv: DotenvConfigOutput): Either<string, unknown> => {
         const { error, parsed } = fromEnv
         if (error) return E.left(error.message)
         if (parsed) {

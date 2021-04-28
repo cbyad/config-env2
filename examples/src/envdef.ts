@@ -1,5 +1,5 @@
 import * as io from "io-ts"
-import { NonEmptyString, NumberString, URL } from ".."
+import { NonEmptyString, NumberString, URL } from 'env-config-validator'
 
 const EnvDef = io.strict({
     SQL_SERVER: NonEmptyString,
