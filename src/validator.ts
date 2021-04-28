@@ -22,15 +22,15 @@ export namespace EnvConfigValidator {
     export const reporter = new CustomReporter()
     const SERVICE_SEPARATOR = '_'
 
-    export const unsafeLoad = <T>(codecs: io.Type<T, unknown, unknown>, envPath?: string): T => {
-        const result = load(codecs, envPath)
+    export const unsafeLoad = <T>(codecs: io.Type<T, unknown, unknown>, groupBy: boolean = false, envPath?: string): T => {
+        const result = load(codecs, groupBy, envPath)
         if (E.isLeft(result)) throw new Error(String(result.left))
         return result.right
     }
 
-    export const load = <T>(codecs: io.Type<T, unknown, unknown>, envPath?: string): E.Either<string, T> => pipe(
+    export const load = <T>(codecs: io.Type<T, unknown, unknown>, groupBy: boolean = false, envPath?: string): E.Either<string, T> => pipe(
         envPath ? config({ path: resolve(__dirname, envPath) }) : config(),
-        fromEnvToJson,
+        fromEnvToJson(groupBy),
         E.map(candidate => validate(candidate, codecs)),
         E.fold<string, io.Validation<T>, E.Either<string, T>>(
             E.left,
@@ -43,7 +43,7 @@ export namespace EnvConfigValidator {
 
     const validate = <T>(input: unknown, codecs: io.Type<T, unknown, unknown>) => codecs.decode(input)
 
-    const fromEnvToJson = (fromEnv: DotenvConfigOutput, groupBy: boolean = false): E.Either<string, unknown> => {
+    const fromEnvToJson = (groupBy: boolean = false) => (fromEnv: DotenvConfigOutput): E.Either<string, unknown> => {
         const { error, parsed } = fromEnv
         if (error) return E.left(error.message)
         if (parsed) {
@@ -52,9 +52,9 @@ export namespace EnvConfigValidator {
                     const prefix = key.split(SERVICE_SEPARATOR)
                     if (prefix.length > 0) {
                         const [groupBy, remains] = [prefix[0], prefix.slice(1).join(SERVICE_SEPARATOR)]
-                        acc[groupBy] = { ...acc[groupBy], [remains]: parsed[key] }
+                        acc[groupBy] = { ...acc[groupBy], [remains]: parsed[key].trim() }
                     }
-                    else acc[key] = parsed[key]
+                    else acc[key] = parsed[key].trim()
                     return acc
                 }, Object())
                 return E.right(parsedGroupBy)
