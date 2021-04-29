@@ -4,8 +4,8 @@ import { NonEmptyString, NumberString, URL } from 'env2'
 /**
  * Here we define schema of our environment variables by using io-ts utilities
  * We use custom types provided by env2
- * @typedef NonEmptyString -> check that value can be empty
- * @typedef NumberString -> check that value is a valid number even if it's encoded in string
+ * @typedef NonEmptyString -> check that value can't be empty
+ * @typedef NumberString -> check that value is a valid number even if it's provided from string
  * @typedef URL -> check that value match a conform url
  */
 const MyEnvironment = io.strict({
