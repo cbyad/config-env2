@@ -14,8 +14,7 @@
   "author": "yannick (cbyad)",
   "license": "MIT",
   "dependencies": {
-    "env-config-validator": "..",
-    "fp-ts": "^2.9.5",
+    "env2": "..",
     "io-ts": "^2.2.15"
   },
   "devDependencies": {

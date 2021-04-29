@@ -1,5 +1,5 @@
 {
-  "name": "env-config-validator",
+  "name": "env2",
   "version": "0.0.1",
   "description": "A tiny lib to validate env file at runtime",
   "main": "dist/index.js",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cbyad/env_config_validator.git"
+    "url": "https://github.com/cbyad/env2.git"
   },
   "keywords": [],
   "author": "yannick (cbyad)",

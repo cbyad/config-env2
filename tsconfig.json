@@ -8,8 +8,8 @@
     "dist"
   ],
   "paths": {
-    "env-config-validator": [
-      "env-config-validator/src"
+    "env2": [
+      "env2/src"
     ]
   },
   "compilerOptions": {
