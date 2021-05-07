@@ -5,48 +5,35 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "sideEffects": false,
-  "files": [
-    "dist",
-    "src"
-  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc -p tsconfig.json",
     "start": "tsc && node dist/index.js",
     "test": "jest",
-    "coverage": "jest --coverage",
-    "dev": "nodemon"
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/cbyad/env2.git"
   },
+  "homepage": "https://github.com/cbyad/env2",
   "keywords": [],
-  "author": "yannick (cbyad)",
+  "author": "cbyad <cbyannick@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^8.1.0",
+    "nconf": "^0.11.2",
     "tslib": "^2.2.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.15",
+    "@types/nconf": "^0.10.0",
     "@types/node": "^14.6.2",
-    "fp-ts": "^2.9.5",
+    "fp-ts": "^2.10.5",
     "io-ts": "^2.2.15",
-    "jest": "^26.6.0",
-    "nodemon": "^2.0.6",
+    "jest": "^26.5.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.4.1",
     "typescript": "^4.2.3"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "index.ts",
-      "./src/**/*.ts",
-      "./core/src/**/*.ts"
-    ],
-    "ext": "ts",
-    "ignore": [
-      "./src/**/*.spec.ts"
-    ],
-    "exec": "tsc && node dist/index.js"
   }
 }

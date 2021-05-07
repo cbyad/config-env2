@@ -1,18 +1,14 @@
-import { config, DotenvConfigOutput } from "dotenv"
+import { config } from "dotenv"
 import * as E from "fp-ts/lib/Either"
 import { pipe } from "fp-ts/lib/function"
 import * as io from "io-ts"
 import { Reporter } from "io-ts/lib/Reporter"
-import { resolve } from "path"
+import nconf from "nconf"
 
 import Either = E.Either
 
 const SERVICE_SEPARATOR = '_'
-
-enum LoadMode {
-    None,
-    Grouped
-}
+enum LoadMode { None, Grouped }
 
 class CustomReporter implements Reporter<string> {
     public report = <T>(validation: io.Validation<T>): string => pipe(
@@ -49,8 +45,8 @@ const load = <T>(codecs: io.Type<T, unknown, unknown>, mode: LoadMode = LoadMode
  * @returns Either monad
  */
 const safeLoad = <T>(codecs: io.Type<T, unknown, unknown>, mode: LoadMode = LoadMode.None, envPath?: string): Either<string, T> => pipe(
-    envPath ? config({ path: resolve(__dirname, envPath) }) : config(),
-    fromEnvToJson(mode),
+    envPath ? config({ path: envPath }) : config(),
+    _ => fromEnvToJson(mode, []),
     E.map(candidate => validate(candidate, codecs)),
     E.fold<string, io.Validation<T>, Either<string, T>>(
         E.left,
@@ -63,9 +59,12 @@ const safeLoad = <T>(codecs: io.Type<T, unknown, unknown>, mode: LoadMode = Load
 
 const validate = <T>(input: unknown, codecs: io.Type<T, unknown, unknown>) => codecs.decode(input)
 
-const fromEnvToJson = (mode: LoadMode) => (fromEnv: DotenvConfigOutput): Either<string, unknown> => {
-    const { error, parsed } = fromEnv
-    if (error) return E.left(error.message)
+const fromEnvToJson = (mode: LoadMode, fields: string[]): Either<string, unknown> => {
+    const parsed = nconf.env().env({
+        parseValues: false,
+        whitelist: fields
+    }).stores.env.store
+
     if (parsed) {
         if (mode == LoadMode.Grouped) {
             const parsedGroupBy: unknown = Object.keys(parsed).reduce((acc, key) => {

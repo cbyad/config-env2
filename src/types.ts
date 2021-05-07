@@ -24,7 +24,6 @@ const NumberString = io.brand(
     (s): s is io.Branded<NonEmptyString, NumberStringBrand> => /^\d+$/.test(s),
     'NumberString'
 )
-// const NumberString = NonEmptyString
 type NumberString = io.TypeOf<typeof NumberString>
 
 /**
