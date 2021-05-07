@@ -61,7 +61,7 @@ const validate = <T>(input: unknown, codecs: io.Type<T, unknown, unknown>) => co
 
 const fromEnvToJson = (mode: LoadMode, fields: string[]): Either<string, unknown> => {
     const parsed = nconf.env().env({
-        parseValues: true,
+        parseValues: false,
         whitelist: fields
     }).stores.env.store
 

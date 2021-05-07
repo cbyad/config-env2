@@ -19,14 +19,11 @@ type NonEmptyString = io.TypeOf<typeof NonEmptyString>
 interface NumberStringBrand {
     readonly NumberString: unique symbol
 }
-const NumberString = io.union([
-    io.number,
-    io.brand(
-        NonEmptyString,
-        (s): s is io.Branded<NonEmptyString, NumberStringBrand> => /^\d+$/.test(s),
-        'NumberString'
-    )
-])
+const NumberString = io.brand(
+    NonEmptyString,
+    (s): s is io.Branded<NonEmptyString, NumberStringBrand> => /^\d+$/.test(s),
+    'NumberString'
+)
 type NumberString = io.TypeOf<typeof NumberString>
 
 /**
