@@ -1,9 +1,9 @@
 import * as io from "io-ts"
-import { NonEmptyString, NumberString, URL } from 'env2'
+import { NonEmptyString, NumberString, URL } from 'config-env2'
 
 /**
  * Here we define schema of our environment variables by using io-ts utilities
- * We use custom types provided by env2
+ * We use custom types provided by config-env2
  * @typedef NonEmptyString -> check that value can't be empty
  * @typedef NumberString -> check that value is a valid number even if it's provided from string
  * @typedef URL -> check that value match a conform url

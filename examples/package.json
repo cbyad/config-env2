@@ -11,7 +11,7 @@
   "author": "cbyad <cbyannick@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "env2": "..",
+    "config-env2": "..",
     "io-ts": "^2.2.15"
   },
   "devDependencies": {

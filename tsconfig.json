@@ -8,8 +8,8 @@
     "dist"
   ],
   "paths": {
-    "env2": [
-      "env2/src"
+    "config-env2": [
+      "config-env2/src"
     ]
   },
   "compilerOptions": {

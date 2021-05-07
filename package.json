@@ -1,10 +1,14 @@
 {
-  "name": "env2",
+  "name": "config-env2",
   "version": "0.0.1",
   "description": "A tiny lib to validate env file at runtime",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "sideEffects": false,
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc -p tsconfig.json",
@@ -14,9 +18,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cbyad/env2.git"
+    "url": "git+https://github.com/cbyad/config-env2.git"
   },
-  "homepage": "https://github.com/cbyad/env2",
+  "homepage": "https://github.com/cbyad/config-env2",
   "keywords": [],
   "author": "cbyad <cbyannick@gmail.com>",
   "license": "MIT",
@@ -35,5 +39,11 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.1",
     "typescript": "^4.2.3"
+  },
+  "bugs": {
+    "url": "https://github.com/cbyad/config-env2/issues"
+  },
+  "directories": {
+    "example": "examples"
   }
 }
