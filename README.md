@@ -1,20 +1,20 @@
-# ENV2 (WIP)
+# CONFIG-ENV2 (WIP)
 ## About
-`env2` stands for en**V**ironment **V**alidator. A tiny library to validate environment variables at runtime and extract content.
+`config-env2` stands for config en**V**ironment **V**alidator. A tiny library to validate environment variables at runtime and extract content.
 
 It's backed by [fp-ts](https://github.com/gcanti/fp-ts) for functional prog utilities and [io-ts](https://github.com/gcanti/io-ts) for runtime validation and define custom types.
 For those who are unfamiliar with functional programming **No Worries** you need to only import `npm i io-ts` and follow `example` supplied
 
 ## Usage
-- Basic usage => `npm i io-ts env2`
-- FP usage => `npm i io-ts fp-ts env2` 
+- Basic usage => `npm i io-ts config-env2`
+- FP usage => `npm i io-ts fp-ts config-env2` 
 
 ## Example
 1. Define your environment schema
 
 ```ts
 import * as io from "io-ts"
-import { NonEmptyString, NumberString, URL } from 'env2'
+import { NonEmptyString, NumberString, URL } from 'config-env2'
 
 const MyEnvironment = io.strict({
     SQL_SERVER: NonEmptyString,
@@ -30,7 +30,7 @@ type MyEnvironment = io.TypeOf<typeof MyEnvironment>
 
 2. validate and extract content
 ```ts
-import { load } from "env2"
+import { load } from "config-env2"
 import { MyEnvironment } from "./src/environment"
 
 const myConf = load(MyEnvironment)

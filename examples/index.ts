@@ -1,4 +1,4 @@
-import { load } from "env2"
+import { load } from "config-env2"
 import { MyEnvironment } from "./src/environment"
 import { connect, SqlConf } from "./src/sql"
 
